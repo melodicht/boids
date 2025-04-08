@@ -193,6 +193,15 @@ class V2D {
 		return v.x * this.x + v.y * this.y;
 	}
 
+        /**
+         * Returns the angle in radians between this vector and the given vector
+         * @param {V2D} v Given vector
+         * @returns {number}
+         */
+        angleBetween(v) {
+                return Math.acos(this.dot(v)/(this.mag()*v.mag()));
+        }
+
 	// UNARY -----------------------------------------
 
 	/**

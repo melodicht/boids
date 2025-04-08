@@ -1,8 +1,9 @@
 class Flock {
-	constructor(boids) {
+	constructor(boids, obstacles) {
 		this.length = boids;
 		this.boids = [];
 		this.buckets = [];
+                this.obstacles = obstacles;
 		this.space = {
 			shape: null,
 			scale: null,
@@ -27,6 +28,7 @@ class Flock {
 			for (const boid of this.boids) {
 				boid.flock(flock);
 				boid.interact();
+                                boid.avoidObstacles(this.obstacles);
 			}
 		}
 	}

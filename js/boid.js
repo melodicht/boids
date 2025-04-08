@@ -23,6 +23,9 @@ class Boid extends V2D {
 		app.stage.addChild(this.desired);
 	}
 
+        // Flock -> [List [Listof Boid] [Listof Number]]
+        // Produces the neighbouring boids and their corresponding distances
+        // from this boid.
 	neighbors(flock) {
 		const cands = flock.candidates(this);
 		const ns = [];
@@ -51,6 +54,7 @@ class Boid extends V2D {
 		return [ns, ds];
 	}
 
+        // Resets the acceleration to be based on the local conditions
 	flock(flock) {
 		this.acc.zero();
 
@@ -127,6 +131,31 @@ class Boid extends V2D {
 			this.acc.sub(ev);
 		}
 	}
+
+        // Changes this acceleration to avoid the given obstacles.
+        avoidObstacles(obstacles) {
+                // casting a ray forward by some distance, and if an obstacle is
+                // detected, then offset the ray by some amount in the angle
+                // away from the obstacle, and repeat until an obstacle is no
+                // longer detected.
+
+                const candidateDirN = this.vel.normalize();
+                while (this.#raycastObstacles(candidateDirN, obstacles)) {
+                        
+                }
+                this.acc.sclAdd(candidateDirN, opt.obstacleAvoidance);
+                
+
+                // Set candidate velocity to the current velocity
+                // Get the normalized vector of the velocity (where it's
+                // facing).
+                // Multiple that vector by some distance constant, add to where
+                // this boid is at, and check if contained inside a wall.
+
+                // While testPos is contained inside a wall:
+                //   - Rotate candidate velocity angle by some constant.
+                //   - Check again
+        }
 
 	update() {
 		this.vel.sclAdd(this.acc, g.delta);

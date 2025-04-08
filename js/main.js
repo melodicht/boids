@@ -56,7 +56,8 @@ const app = new PIXI.Application({
 
 document.body.prepend(app.view);
 
-let flock = new Flock(opt.boids);
+let obstacles = new Obstacles(opt.wallPositions);
+let flock = new Flock(opt.boids, obstacles);
 
 function loop(delta) {
 	g.delta = delta;

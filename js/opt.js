@@ -33,11 +33,24 @@ const opt = (() => {
 		bias: 1.5,
 		cohesion: 1,
 		separation: 1.1,
+                obstacleAvoidance: 2.0,
 		maxForce: 0.2,
 		minSpeed: 1,
 		maxSpeed: 4,
 		drag: 0.005,
 		noise: 1,
+
+                wallColor: 0x0000ff,
+                cellWidth: 10,  // In pixels
+                cellHeight: 10,
+                wallPositions: [
+                        [[50,50], [50, 75]],
+                        [[50,50], [100, 50]],
+                        [[10,10], [15, 10]],
+                        [[30,10], [30, 80]],
+                        [[75, 70], [90, 90]],
+                        [[75, 20], [90, 40]]
+                ],
 
 		debug: false,
 		buckets: false
