@@ -186,9 +186,11 @@ class Boid extends V2D {
         #getRotationDir(obstacles, dirN) {
                 const posRotV = dirN.clone().rotate(opt.obstacleAvoidanceTestRotationAngle);
                 const negRotV = dirN.clone().rotate(opt.obstacleAvoidanceTestRotationAngle*-1);
-                const posDist = this.#raycastObstacles(posRotV, obstacles);
-                const negDist = this.#raycastObstacles(negRotV, obstacles);
-                return posDist < negDist ? 1 : -1;
+                const maybePosDist = this.#raycastObstacles(posRotV, obstacles);
+                const maybeNegDist = this.#raycastObstacles(negRotV, obstacles);
+                const posDist = maybePosDist ? maybePosDist : Infinity;
+                const negDist = maybeNegDist ? maybeNegDist : Infinity;
+                return posDist > negDist ? 1 : -1;
         }
 
 	update() {

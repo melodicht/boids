@@ -51,7 +51,7 @@ const opt = (() => {
                         [[75, 70], [90, 90]],
                         [[75, 20], [90, 40]]
                 ],
-                obstacleAvoidanceThreshold: 5000,  // In pixels
+                obstacleAvoidanceThreshold: 1000,  // In pixels
                 raycastDistGranularity: 9,
                 obstacleAvoidanceTestRotationAngle: 0.2,
                 maxRotation:2*Math.Pi,
