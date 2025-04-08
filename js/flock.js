@@ -54,7 +54,8 @@ class Flock {
 			}
 		} else {
 			for (let i = this.boids.length; i < n; i++) {
-				this.boids.push(new Boid(i));
+                                const [x, y] = this.obstacles.getRandomXY();
+				this.boids.push(new Boid(i, x, y));
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 class Boid extends V2D {
-	constructor(index) {
-		super(random(g.width), random(g.height));
+	constructor(index, x, y) {
+		super(x, y);
 
 		this.vel = V2D.random(random(opt.minSpeed, opt.maxSpeed));
 		this.acc = new V2D();
@@ -134,27 +134,61 @@ class Boid extends V2D {
 
         // Changes this acceleration to avoid the given obstacles.
         avoidObstacles(obstacles) {
-                // casting a ray forward by some distance, and if an obstacle is
-                // detected, then offset the ray by some amount in the angle
-                // away from the obstacle, and repeat until an obstacle is no
-                // longer detected.
+                let currDirN = this.vel.clone().normalize();
+                if (this.#raycastObstacles(currDirN, obstacles)) {
 
-                const candidateDirN = this.vel.normalize();
-                while (this.#raycastObstacles(candidateDirN, obstacles)) {
-                        
+                        const rotationDir = this.#getRotationDir(obstacles, currDirN);
+                        currDirN = this.#getAvoidObstaclesDir(obstacles, currDirN, rotationDir);
                 }
-                this.acc.sclAdd(candidateDirN, opt.obstacleAvoidance);
-                
+                this.acc.sclAdd(currDirN, opt.obstacleAvoidance);
+        }
 
-                // Set candidate velocity to the current velocity
-                // Get the normalized vector of the velocity (where it's
-                // facing).
-                // Multiple that vector by some distance constant, add to where
-                // this boid is at, and check if contained inside a wall.
+        // Obstacles V2D [U 1 -1] -> V2D
+        #getAvoidObstaclesDir(obstacles, currDirN, rotationDir) {
+                const rotAngle = opt.obstacleAvoidanceTestRotationAngle*rotationDir;
+                let rotationSoFar = rotAngle;
+                let candidateDirN = currDirN.clone().rotate(rotAngle);
+                while (this.#raycastObstacles(candidateDirN, obstacles)) {
+                        candidateDirN.rotate(rotAngle);
+                        rotationSoFar += rotAngle;
 
-                // While testPos is contained inside a wall:
-                //   - Rotate candidate velocity angle by some constant.
-                //   - Check again
+                        if (rotationSoFar >= opt.maxRotation) {
+                                console.error("Rotation: Obstacle avoidance unable to find satisfactory direction, breaking out of loop.");
+                                break;
+                        }
+                }
+                return candidateDirN;
+        }
+
+        // V2D Obstacles -> [U Number False]
+        // Sends a raycast in the given direction and returns the distance to
+        // the obstacle it hits, or false if no obstacle is hit within the
+        // limit as defined in the constants. Guaranteed to not return 0
+        // provided the raycast distance granularity is not 0.
+        #raycastObstacles(dirVN, obstacles) {
+                let currMag = opt.raycastDistGranularity;
+                while (currMag <= opt.obstacleAvoidanceThreshold) {
+                        const currDirV = dirVN.clone().setMag(currMag);
+                        const candidateX = this.x + currDirV.x;
+                        const candidateY = this.y + currDirV.y;
+                        if (obstacles.has_wall(candidateX, candidateY)) {
+                                return currMag;
+                        }
+                        currMag += opt.raycastDistGranularity;
+                }
+                return false;
+        }
+
+        // Obstacles V2D -> [U 1 -1]
+        // Gets the rotation direction such that avoiding the obstacle requires
+        // as little movement as possible. What negation means to direction is
+        // the same as what it means in V2D's rotation functionality.
+        #getRotationDir(obstacles, dirN) {
+                const posRotV = dirN.clone().rotate(opt.obstacleAvoidanceTestRotationAngle);
+                const negRotV = dirN.clone().rotate(opt.obstacleAvoidanceTestRotationAngle*-1);
+                const posDist = this.#raycastObstacles(posRotV, obstacles);
+                const negDist = this.#raycastObstacles(negRotV, obstacles);
+                return posDist < negDist ? 1 : -1;
         }
 
 	update() {
