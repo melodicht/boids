@@ -1,12 +1,14 @@
 class Boid extends V2D {
-	constructor(index, x, y) {
+	constructor(index, x, y, goals) {
 		super(x, y);
 
 		this.vel = V2D.random(random(opt.minSpeed, opt.maxSpeed));
 		this.acc = new V2D();
 
 		this.index = index;
-
+                this.tag = getRandomIntInclusive(0, opt.numTags - 1);
+                this.goals = goals
+                
 		this.shape = new PIXI.Graphics();
 		this.shapeMode = null;
 
@@ -131,6 +133,12 @@ class Boid extends V2D {
 			this.acc.sub(ev);
 		}
 	}
+
+        // Changes this acceleration to get to goal.
+        seekGoal() {
+                const deltaAcc = this.goals.getDeltaAcc(this.tag, this.x, this.y);
+                this.acc.add(deltaAcc);
+        }
 
         // Changes this acceleration to avoid the given obstacles.
         avoidObstacles(obstacles) {

@@ -15,6 +15,9 @@ const g = {
 	explode: 0,
 	explodePos: new V2D(),
 
+        dropGoal: 0,
+        dropGoalPos: new V2D(),
+
 	nextFrame: false,
 
 	width: window.innerWidth,
@@ -57,7 +60,8 @@ const app = new PIXI.Application({
 document.body.prepend(app.view);
 
 let obstacles = new Obstacles(opt.wallPositions);
-let flock = new Flock(opt.boids, obstacles);
+let goals = new Goals(obstacles);
+let flock = new Flock(opt.boids, obstacles, goals);
 
 function loop(delta) {
 	g.delta = delta;
@@ -72,8 +76,12 @@ function loop(delta) {
 	g.sqVis = opt.vision * opt.vision;
 
 	if (!opt.paused) {
+                // I actually have no idea what units delta is in
+                // going to assume 10th of a millisecond
+                goals.update(delta*10);
 		flock.update();
 	} else if (g.nextFrame) {
+                goals.update(delta*10);
 		flock.update();
 		g.nextFrame = false;
 	}
@@ -94,6 +102,12 @@ function loop(delta) {
 		app.stage.removeChild(g.sprites.explode);
 		g.explode = 0;
 	}
+
+        if (g.dropGoal === 1) {
+                const rndTag = getRandomIntInclusive(0, opt.numTags - 1);
+                goals.addGoalAt(rndTag, g.dropGoalPos.x, g.dropGoalPos.y);
+                g.dropGoal = 0;
+        }
 
 	if (opt.debug) {
 		g.fpsA.push(60 / delta);

@@ -48,10 +48,9 @@
 
 	function double() {
 		if (g.mouse.over) {
-			g.explode = 1;
-			g.explodePos.copy(g.mouse);
-			g.sprites.explode.x = g.explodePos.x;
-			g.sprites.explode.y = g.explodePos.y;
+                        // Replaced explosion with drop goal.
+                        g.dropGoal = 1;
+                        g.dropGoalPos.copy(g.mouse);
 		}
 	}
 

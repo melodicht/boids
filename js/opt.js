@@ -14,7 +14,7 @@ const opt = (() => {
 	const defaults = {
 		menu: true,
 		paused: false,
-		boids: 500,
+		boids: 850,
 
 		toggle: false,
 		desired: false,
@@ -51,11 +51,16 @@ const opt = (() => {
                         [[75, 70], [90, 90]],
                         [[75, 20], [90, 40]]
                 ],
-                obstacleAvoidanceThreshold: 1000,  // In pixels
+                obstacleAvoidanceThreshold: 100,  // In pixels
                 raycastDistGranularity: 9,
                 obstacleAvoidanceTestRotationAngle: 0.2,
-                maxRotation:2*Math.Pi,
-                
+                maxRotation: 2*Math.Pi,
+
+                numTags: 1,
+                goalDurationMS: 10000,
+                goalColour: 0xff0000,
+                goalRadius: 5,  // In pixels
+                goalForce: 0.5,
 
 		debug: false,
 		buckets: false

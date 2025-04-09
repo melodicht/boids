@@ -1,9 +1,10 @@
 class Flock {
-	constructor(boids, obstacles) {
+	constructor(boids, obstacles, goals) {
 		this.length = boids;
 		this.boids = [];
 		this.buckets = [];
                 this.obstacles = obstacles;
+                this.goals = goals;
 		this.space = {
 			shape: null,
 			scale: null,
@@ -28,6 +29,7 @@ class Flock {
 			for (const boid of this.boids) {
 				boid.flock(flock);
 				boid.interact();
+                                boid.seekGoal();
                                 boid.avoidObstacles(this.obstacles);
 			}
 		}
@@ -54,8 +56,8 @@ class Flock {
 			}
 		} else {
 			for (let i = this.boids.length; i < n; i++) {
-                                const [x, y] = this.obstacles.getRandomXY();
-				this.boids.push(new Boid(i, x, y));
+                                // const [x, y] = this.obstacles.getRandomXY();
+				this.boids.push(new Boid(i, 100, 100, this.goals));
 			}
 		}
 	}
