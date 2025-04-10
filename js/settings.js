@@ -12,6 +12,7 @@ function getDefaults() {
 
 		particle: false,
 		bounce: false,
+                rgoalForce: 10,
 		raccuracy: 5,
 		rvision: 25,
 		ralignment: 1.1,
@@ -108,6 +109,9 @@ const opt = new Vue({
 			return parseFloat(this.rboids);
 		},
 		// trail() { return parseFloat(this.rtrail) },
+                goalForce() {
+                        return parseFloat(this.rgoalForce);
+                }
 		accuracy() {
 			const v = Math.round(2 ** parseFloat(this.raccuracy));
 			if (v === 1024) return 0;

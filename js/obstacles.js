@@ -47,13 +47,18 @@ class Obstacles {
         getRandomXY() {
                 let candidate = [random(g.width), random(g.height)];
                 let count = 0;
+                if (this.has_wall(candidate[0], candidate[1])) {
+                        return [35, 100];
+                }
+                /*
                 while (this.has_wall(candidate[0], candidate[1])) {
                         candidate = [random(g.width), random(g.height)];
                         count++;
-                        if (count > 10) {
+                        if (count > 1) {
                                 return [35, 100];
                         }
-                }
+                        }
+                        */
                 return candidate;
         }
 

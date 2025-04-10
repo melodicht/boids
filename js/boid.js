@@ -159,8 +159,9 @@ class Boid extends V2D {
                 while (this.#raycastObstacles(candidateDirN, obstacles)) {
                         candidateDirN.rotate(rotAngle);
                         rotationSoFar += rotAngle;
-
-                        if (rotationSoFar >= opt.maxRotation) {
+                        
+                        if (rotationSoFar <= -1*opt.maxRotation ||
+                            rotationSoFar >= opt.maxRotation) {
                                 console.error("Rotation: Obstacle avoidance unable to find satisfactory direction, breaking out of loop.");
                                 break;
                         }
@@ -173,10 +174,11 @@ class Boid extends V2D {
         // the obstacle it hits, or false if no obstacle is hit within the
         // limit as defined in the constants. Guaranteed to not return 0
         // provided the raycast distance granularity is not 0.
+        // NOTE: Mutates dirVN!
         #raycastObstacles(dirVN, obstacles) {
                 let currMag = opt.raycastDistGranularity;
                 while (currMag <= opt.obstacleAvoidanceThreshold) {
-                        const currDirV = dirVN.clone().setMag(currMag);
+                        const currDirV = dirVN.setMag(currMag);
                         const candidateX = this.x + currDirV.x;
                         const candidateY = this.y + currDirV.y;
                         if (obstacles.has_wall(candidateX, candidateY)) {

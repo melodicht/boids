@@ -44,23 +44,27 @@ const opt = (() => {
                 cellWidth: 10,  // In pixels
                 cellHeight: 10,
                 wallPositions: [
-                        [[50,50], [50, 75]],
-                        [[50,50], [100, 50]],
-                        [[10,10], [15, 10]],
-                        [[30,10], [30, 80]],
-                        [[75, 70], [90, 90]],
-                        [[75, 20], [90, 40]]
+                        [[50,40], [50,65]],
+                        [[50,40], [100,40]],
+                        [[10,10], [15,10]],
+                        [[30,10], [30,80]],
+                        [[75,55], [90,75]],
+                        [[75,10], [90,30]],
+                        [[110,40], [115,80]],
+                        [[110,30], [130,40]],
+                        [[125,40], [130,80]]
                 ],
-                obstacleAvoidanceThreshold: 100,  // In pixels
+                obstacleAvoidanceThreshold: 50,  // In pixels
                 raycastDistGranularity: 9,
                 obstacleAvoidanceTestRotationAngle: 0.2,
-                maxRotation: 2*Math.Pi,
+                maxRotation: 6.284, // 2*Math.Pi, but some reason inequality
+                                    // with that doesn't work?
 
                 numTags: 1,
                 goalDurationMS: 10000,
                 goalColour: 0xff0000,
                 goalRadius: 5,  // In pixels
-                goalForce: 0.5,
+                goalForce: 15,
 
 		debug: false,
 		buckets: false
@@ -144,7 +148,12 @@ const opt = (() => {
 					data.accuracy
 				);
 				return;
-			} else if (model === "vision") g.shapeMode++;
+			} else if (model === "goalForce") {
+                                select(`[data-show=goalForce]`).textContent = Math.floor(
+					data.goalForce
+				);
+                        }
+                        else if (model === "vision") g.shapeMode++;
 
 			select(`[data-show=${model}]`).textContent = data[model];
 		});
